@@ -94,6 +94,8 @@ service PD {
     rpc ReportBuckets(stream ReportBucketsRequest) returns (ReportBucketsResponse) {}
 
     rpc ReportMinResolvedTS(ReportMinResolvedTsRequest) returns (ReportMinResolvedTsResponse) {}
+
+    rpc TokenBucket(TokenBucketRequest) returns (TokenBucketResponse) {}
 }
 
 message WatchGlobalConfigRequest {
@@ -864,4 +866,37 @@ message ReportMinResolvedTsRequest {
 
 message ReportMinResolvedTsResponse {
     ResponseHeader header = 1;
+}
+
+message TokenBucketRequest {
+  RequestHeader header = 1;
+
+  Consumption consumption_since_last_request = 2 [(gogoproto.nullable) = false];
+
+  uint64 tenant_id = 3;
+
+  string instance_fingerprint = 4;
+
+  double requested_r_u = 5;
+
+  uint64 target_request_period_seconds = 6;
+}
+
+message TokenBucketResponse {
+  ResponseHeader header = 1;
+
+  double granted_r_u = 2;
+
+  int64 trickle_duration_seconds = 3;
+
+  double fallback_rate = 4;
+}
+
+message Consumption {
+  double r_u = 1;
+  uint64 read_requests = 2;
+  uint64 read_bytes = 3;
+  uint64 write_requests = 4;
+  uint64 write_bytes = 5;
+  double pods_cpu_seconds = 6;
 }
