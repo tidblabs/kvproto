@@ -96,6 +96,14 @@ service PD {
     rpc ReportMinResolvedTS(ReportMinResolvedTsRequest) returns (ReportMinResolvedTsResponse) {}
 
     rpc TokenBucket(TokenBucketRequest) returns (TokenBucketResponse) {}
+
+    rpc CreateTenantID(CreateTenantIDRequest) returns (CreateTenantIDResponse) {}
+
+    rpc DeleteTenantID(DeleteTenantIDRequest) returns (DeleteTenantIDResponse) {}
+
+    rpc GetDeletedTenantID(stream GetDeletedTenantIDRequest) returns (stream GetDeletedTenantIDResponse) {}
+
+    rpc ReclaimTenantID(ReclaimTenantIDRequest) returns (ReclaimTenantIDResponse) {}
 }
 
 message WatchGlobalConfigRequest {
@@ -867,4 +875,45 @@ message Consumption {
   uint64 write_requests = 4;
   uint64 write_bytes = 5;
   double pods_cpu_seconds = 6;
+}
+
+message CreateTenantIDRequest {
+  RequestHeader header = 1;
+  string name = 2;
+}
+
+message CreateTenantIDResponse {
+  ResponseHeader header = 1;
+  uint32 id = 2;
+}
+
+message DeleteTenantIDRequest {
+  RequestHeader header = 1;
+  string name = 2;
+  uint32 id = 3;
+}
+
+message DeleteTenantIDResponse {
+  ResponseHeader header = 1;
+}
+
+message GetDeletedTenantIDRequest {
+  RequestHeader header = 1;
+  uint32 deleted_seconds = 2;
+}
+
+message GetDeletedTenantIDResponse {
+  ResponseHeader header = 1;
+  string name = 2;
+  uint32 id = 3;
+}
+
+message ReclaimTenantIDRequest {
+  RequestHeader header = 1;
+  string name = 2;
+  uint32 id = 3;
+}
+
+message ReclaimTenantIDResponse {
+  ResponseHeader header = 1;
 }
